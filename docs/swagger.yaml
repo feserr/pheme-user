@@ -1,0 +1,201 @@
+basePath: /api/
+definitions:
+  models.Message:
+    description: message JSON
+    properties:
+      message:
+        type: string
+    type: object
+  models.Pheme:
+    description: Pheme content
+    properties:
+      category:
+        type: string
+      createdAt:
+        type: string
+      createdId:
+        type: integer
+      id:
+        type: integer
+      text:
+        type: string
+      updatedAt:
+        type: string
+      userId:
+        type: integer
+      version:
+        type: integer
+      visibility:
+        type: integer
+    type: object
+  models.PhemeParamsID:
+    properties:
+      id:
+        type: integer
+    type: object
+  models.User:
+    description: User account
+    properties:
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      passwordUpdatedAt:
+        type: string
+      userName:
+        type: string
+      version:
+        type: integer
+    type: object
+info:
+  contact:
+    email: feserr3@gmail.com
+    name: Elias Serrano
+  description: Pheme users service.
+  license:
+    name: BSD 2-Clause License
+    url: http://opensource.org/licenses/BSD-2-Clause
+  title: Pheme users
+  version: "1.0"
+paths:
+  /pheme:
+    get:
+      consumes:
+      - application/json
+      description: get all phemes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Pheme'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Message'
+      summary: Retrieve all phemes
+      tags:
+      - phemes
+    post:
+      consumes:
+      - application/json
+      description: post a user pheme
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PhemeParamsID'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Message'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Message'
+      summary: Post a pheme to the user
+      tags:
+      - phemes
+  /pheme/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete a user pheme
+      parameters:
+      - description: Pheme ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PhemeParamsID'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Message'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Message'
+      summary: Delete a pheme from the user
+      tags:
+      - phemes
+    put:
+      consumes:
+      - application/json
+      description: update a user pheme
+      parameters:
+      - description: Pheme ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Pheme'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Message'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Message'
+      summary: Update a pheme to the user
+      tags:
+      - phemes
+  /pheme/mine:
+    get:
+      consumes:
+      - application/json
+      description: get the user phemes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Pheme'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Message'
+      summary: Retrieve the user phemes
+      tags:
+      - phemes
+  /user/{name}:
+    get:
+      consumes:
+      - application/json
+      description: get the user phemes
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Message'
+      summary: Retrieve the user phemes
+      tags:
+      - user
+swagger: "2.0"
