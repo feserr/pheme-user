@@ -21,4 +21,5 @@ services:
       - "8080:8080"
 
 volumes:
-  pheme_db
+  pheme_db:
+    external: true
