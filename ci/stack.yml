@@ -22,4 +22,3 @@ services:
 
 volumes:
   pheme_db:
-    external: true
