@@ -1,0 +1,24 @@
+version: '3.9'
+
+services:
+  pheme_db:
+    image: postgres:14.5
+    restart: always
+    volumes:
+      - pheme_db:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=pheme_db
+    command: postgres -c listen_addresses='*'
+
+  adminer:
+    image: adminer:4.8.1
+    restart: always
+    ports:
+      - "8080:8080"
+
+volumes:
+  pheme_db
