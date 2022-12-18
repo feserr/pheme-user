@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/feserr/pheme-auth v0.0.0
+	github.com/feserr/pheme-auth v0.0.0-20221216180911-d604d44fd1ad
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gofiber/fiber/v2 v2.38.1
 	github.com/swaggo/fiber-swagger v1.3.0
@@ -12,8 +12,6 @@ require (
 	gorm.io/driver/postgres v1.4.4
 	gorm.io/gorm v1.24.0
 )
-
-replace github.com/feserr/pheme-auth => ../pheme-auth
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
