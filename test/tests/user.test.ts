@@ -3,6 +3,8 @@ import {
 } from '@jest/globals';
 import request from 'supertest';
 
+jest.setTimeout(10000);
+
 const authUrl = 'http://127.0.0.1:8000';
 const phemeUrl = 'http://127.0.0.1:8001';
 

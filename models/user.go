@@ -14,7 +14,10 @@ func UserVersion() uint {
 }
 
 func init() {
-	Db.AutoMigrate(User{})
+	err := Db.AutoMigrate(User{})
+	if err != nil {
+		panic("Couldn't migrate DB")
+	}
 }
 
 // User model info

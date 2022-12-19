@@ -1,0 +1,76 @@
+version: '3.9'
+
+services:
+  pheme-db:
+    container_name: pheme-db-container
+    image: postgres:14.5
+    restart: always
+    volumes:
+      - pheme:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - pheme-network
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+
+  pheme-auth:
+    container_name: pheme-auth-container
+    depends_on:
+      pheme-db:
+        condition: service_started
+    volumes:
+      - .:/app
+    ports:
+      - ${PHEME_AUTH_PORT}:${PHEME_AUTH_PORT}
+    networks:
+      - pheme-network
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - SERVER_HOST=${PHEME_HOST}
+      - SERVER_PORT=${PHEME_AUTH_PORT}
+    build:
+      context: ../auth
+      dockerfile: ./ci/pheme_auth.Dockerfile
+    tty: true
+    restart: on-failure
+
+  pheme-user:
+    container_name: pheme-user-container
+    depends_on:
+      pheme-db:
+        condition: service_started
+    volumes:
+      - .:/app
+    ports:
+      - ${PHEME_USER_PORT}:${PHEME_USER_PORT}
+    networks:
+      - pheme-network
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - SERVER_HOST=${PHEME_HOST}
+      - SERVER_PORT=${PHEME_USER_PORT}
+    build:
+      context: ..
+      dockerfile: ./ci/pheme_user.Dockerfile
+    tty: true
+    restart: on-failure
+
+volumes:
+  pheme:
+
+networks:
+  pheme-network:
+    driver: bridge

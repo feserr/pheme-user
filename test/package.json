@@ -6,7 +6,8 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "lint": "eslint $(git diff --name-only --relative main -- ./tests | grep -E '.[j|t]s$' | xargs) --ignore-pattern node_modules/"
   },
   "repository": {
     "type": "git",
