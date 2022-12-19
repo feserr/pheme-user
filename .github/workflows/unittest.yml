@@ -55,9 +55,9 @@ jobs:
 
       - name: Stop containers
         if: always()
-        run: docker-compose -f "./ci/stack.yml" down
+        run: docker-compose --env-file .env -f "./ci/stack.yml" down
 
       - name: Stop auth containers
         working-directory: ./auth
         if: always()
-        run: docker-compose -f "./ci/stack.yml" down
+        run: docker-compose --env-file .env -f "./ci/stack.yml" down
