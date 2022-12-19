@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"os"
+
 	"github.com/feserr/pheme-user/database"
 	_ "github.com/feserr/pheme-user/docs"
 	"github.com/feserr/pheme-user/routes"
@@ -21,7 +24,7 @@ import (
 
 // @BasePath /api/
 func main() {
-	database.Connect()
+	database.Connect(os.Getenv("DATABASE_HOST"), os.Getenv("DATABASE_USER"), os.Getenv("DATABASE_NAME"))
 
 	app := fiber.New(fiber.Config{
 		Prefork:       true,
@@ -39,5 +42,5 @@ func main() {
 
 	routes.Setup(app)
 
-	app.Listen("localhost:8001")
+	app.Listen(fmt.Sprintf("%v:%v", os.Getenv("SERVER_HOST"), os.Getenv("SERVER_PORT")))
 }
