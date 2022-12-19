@@ -22,3 +22,6 @@ go.work
 
 # Other
 .DS_Store
+
+# IDEs
+.vscode
