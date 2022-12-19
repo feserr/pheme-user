@@ -1,8 +1,13 @@
 package models
 
-import "github.com/feserr/pheme-user/database"
+import (
+	"os"
 
-var Db = database.Connect()
+	"github.com/feserr/pheme-user/database"
+)
+
+// Db global db var
+var Db = database.Connect(os.Getenv("DATABASE_HOST"), os.Getenv("DATABASE_USER"), os.Getenv("DATABASE_NAME"))
 
 func removeFromList[T comparable](list []T, item T) []T {
 	for pos, other := range list {
