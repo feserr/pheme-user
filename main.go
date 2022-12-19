@@ -24,7 +24,7 @@ import (
 
 // @BasePath /api/
 func main() {
-	database.Connect(os.Getenv("DATABASE_HOST"), os.Getenv("DATABASE_USER"), os.Getenv("DATABASE_NAME"))
+	database.Connect(os.Getenv("DATABASE_HOST"), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_NAME"))
 
 	app := fiber.New(fiber.Config{
 		Prefork:       true,

@@ -7,8 +7,9 @@ import (
 	"gorm.io/gorm"
 )
 
-func Connect(host string, user string, dbname string) *gorm.DB {
-	dsn := fmt.Sprintf("host=%s user=%s password=docker dbname=%s", host, user, dbname)
+// Connect set up the database connection
+func Connect(host string, user string, password string, dbname string) *gorm.DB {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s", host, user, password, dbname)
 	connection, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
 	if err != nil {

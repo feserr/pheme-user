@@ -7,7 +7,7 @@ import (
 )
 
 // Db global db var
-var Db = database.Connect(os.Getenv("DATABASE_HOST"), os.Getenv("DATABASE_USER"), os.Getenv("DATABASE_NAME"))
+var Db = database.Connect(os.Getenv("DATABASE_HOST"), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_NAME"))
 
 func removeFromList[T comparable](list []T, item T) []T {
 	for pos, other := range list {
