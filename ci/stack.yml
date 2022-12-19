@@ -39,7 +39,7 @@ services:
       - SERVER_PORT=${PHEME_AUTH_PORT}
     build:
       context: ../auth
-      dockerfile: ./ci/pheme_user.Dockerfile
+      dockerfile: ./ci/pheme_auth.Dockerfile
     tty: true
     restart: on-failure
 
