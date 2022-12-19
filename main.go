@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/feserr/pheme-user/database"
 	_ "github.com/feserr/pheme-user/docs"
 	"github.com/feserr/pheme-user/routes"
 	"github.com/gofiber/fiber/v2"
@@ -24,8 +23,6 @@ import (
 
 // @BasePath /api/
 func main() {
-	database.Connect(os.Getenv("DATABASE_HOST"), os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_PASSWORD"), os.Getenv("POSTGRES_NAME"))
-
 	app := fiber.New(fiber.Config{
 		Prefork:       true,
 		CaseSensitive: true,
