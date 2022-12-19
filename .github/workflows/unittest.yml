@@ -47,17 +47,16 @@ jobs:
         run: go mod verify
 
       - name: Run tests
+        working-directory: ./test
         run: |
-          go run . &
-          cd test
           npm ci
           npm test
 
-      - name: Stop containers
+      - name: Stop auth containers
+        working-directory: ./auth
         if: always()
         run: docker-compose --env-file .env -f "./ci/stack.yml" down
 
-      - name: Stop auth containers
-        working-directory: ./auth
+      - name: Stop containers
         if: always()
         run: docker-compose --env-file .env -f "./ci/stack.yml" down
