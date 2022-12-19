@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
-	github.com/feserr/pheme-auth v0.0.0-20221216180911-d604d44fd1ad
+	github.com/feserr/pheme-auth v0.0.0-20221219141510-c84d0649fff5
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/gofiber/fiber/v2 v2.40.1
 	github.com/swaggo/fiber-swagger v1.3.0

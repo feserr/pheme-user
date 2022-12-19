@@ -20,8 +20,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible h1:7qlOGliEKZXTDg6OTjfoBKDXWrumCAMpl/TFQ4/5kLM=
 github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZmtrrCbhqsmaPHjLKYnJCaQ=
-github.com/feserr/pheme-auth v0.0.0-20221216180911-d604d44fd1ad h1:L+N+haiADpNoZpauK3LY8cSuQG+dvgR7/r11jimrW20=
-github.com/feserr/pheme-auth v0.0.0-20221216180911-d604d44fd1ad/go.mod h1:nVEgL3YzDQcTcIOLFiiFAMlT1iUCn6vKiqNAKC5UV+Q=
+github.com/feserr/pheme-auth v0.0.0-20221219141510-c84d0649fff5 h1:C1GOPfyVg0m54x5xC6T5b75q2QehY9GfLnrrzLapC4E=
+github.com/feserr/pheme-auth v0.0.0-20221219141510-c84d0649fff5/go.mod h1:eE82ywsuGYWuHXWmboxDAwLd6ovkX/dzSfXiF6cgb14=
 github.com/ghodss/yaml v1.0.0/go.mod h1:4dBDuWmgqj2HViK6kFavaiC9ZROes6MMH2rRYeMEF04=
 github.com/go-kit/log v0.1.0/go.mod h1:zbhenjAZHb184qTLMA9ZjW7ThYL0H2mk7Q6pNt4vbaY=
 github.com/go-logfmt/logfmt v0.5.0/go.mod h1:wCYkCAKZfumFQihp8CzCvQ3paCTfi41vtzG1KdI/P7A=
