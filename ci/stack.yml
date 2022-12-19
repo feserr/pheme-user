@@ -26,7 +26,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8001:8001
+      - ${PHEME_AUTH_PORT}:${PHEME_AUTH_PORT}
     networks:
       - pheme-network
     environment:
@@ -51,7 +51,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 8001:8001
+      - ${PHEME_USER_PORT}:${PHEME_USER_PORT}
     networks:
       - pheme-network
     environment:
