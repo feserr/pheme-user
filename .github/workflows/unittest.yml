@@ -25,11 +25,11 @@ jobs:
           path: ./auth
 
       - name: Start containers
-        run: docker-compose -f "./ci/stack.yml" up -d --build
+        run: docker-compose --env-file .env -f "./ci/stack.yml" up -d --build
 
       - name: Start auth container
         working-directory: ./auth
-        run: docker-compose -f "./ci/stack.yml" up -d --build pheme-auth
+        run: docker-compose --env-file .env -f "./ci/stack.yml" up -d --build pheme-auth
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
