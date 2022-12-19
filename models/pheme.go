@@ -12,7 +12,10 @@ func PhemeVersion() uint {
 }
 
 func init() {
-	Db.AutoMigrate(Pheme{})
+	err := Db.AutoMigrate(Pheme{})
+	if err != nil {
+		panic("Couldn't migrate DB")
+	}
 }
 
 // Pheme model info

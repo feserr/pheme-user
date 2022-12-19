@@ -1,24 +1,51 @@
 version: '3.9'
 
 services:
-  pheme_db:
+  pheme-db:
+    container_name: pheme-db-container
     image: postgres:14.5
     restart: always
     volumes:
-      - pheme_db:/var/lib/postgresql/data
+      - pheme:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
+    networks:
+      - pheme-network
     environment:
-      - POSTGRES_USER=docker
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_DB=pheme_db
-    command: postgres -c listen_addresses='*'
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
 
-  adminer:
-    image: adminer:4.8.1
-    restart: always
+  pheme-user:
+    container_name: pheme-user-container
+    depends_on:
+      pheme-db:
+        condition: service_started
+    volumes:
+      - .:/app
     ports:
-      - "8080:8080"
+      - 8000:8000
+    networks:
+      - pheme-network
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - SERVER_HOST=${SERVER_HOST}
+      - SERVER_PORT=${SERVER_PORT}
+    build:
+      context: ..
+      dockerfile: ./ci/pheme_user.Dockerfile
+    tty: true
+    restart: on-failure
 
 volumes:
-  pheme_db:
+  pheme:
+
+networks:
+  pheme-network:
+    driver: bridge
