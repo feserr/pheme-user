@@ -18,6 +18,31 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
 
+  pheme-auth:
+    container_name: pheme-auth-container
+    depends_on:
+      pheme-db:
+        condition: service_started
+    volumes:
+      - .:/app
+    ports:
+      - 8001:8001
+    networks:
+      - pheme-network
+    environment:
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_PORT=${DATABASE_PORT}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - SERVER_HOST=${PHEME_HOST}
+      - SERVER_PORT=${PHEME_AUTH_PORT}
+    build:
+      context: ../auth
+      dockerfile: ./ci/pheme_user.Dockerfile
+    tty: true
+    restart: on-failure
+
   pheme-user:
     container_name: pheme-user-container
     depends_on:
@@ -35,8 +60,8 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-      - SERVER_HOST=${SERVER_HOST}
-      - SERVER_PORT=${SERVER_PORT}
+      - SERVER_HOST=${PHEME_HOST}
+      - SERVER_PORT=${PHEME_USER_PORT}
     build:
       context: ..
       dockerfile: ./ci/pheme_user.Dockerfile
