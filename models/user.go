@@ -157,7 +157,6 @@ func GetFollowers(userID uint) (*[]uint, error) {
 
 // AddFriend adds a friends to a user.
 func AddFriend(userID uint, friendID uint) (*User, error) {
-	friend := &User{}
 	friend, err := FindByID(friendID)
 	if err != nil {
 		println(err)
@@ -177,7 +176,6 @@ func AddFriend(userID uint, friendID uint) (*User, error) {
 
 // AddFollower adds a follower to a user.
 func AddFollower(userID uint, followerID uint) (*User, error) {
-	follower := &User{}
 	follower, err := FindByID(followerID)
 	if err != nil {
 		println(err)
