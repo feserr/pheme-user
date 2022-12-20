@@ -300,7 +300,7 @@ const docTemplate = `{
                 "passwordUpdatedAt": {
                     "type": "string"
                 },
-                "userName": {
+                "username": {
                     "type": "string"
                 },
                 "version": {

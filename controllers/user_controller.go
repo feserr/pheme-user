@@ -5,9 +5,43 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GetUserByID godoc
+// @Summary      Retrieve the user by ID
+// @Description  get the user
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        name path      id  true  "User ID"
+// @Success      200  {object}  models.UserPublicData
+// @Failure      400  {object}  models.Message
+// @Failure      401  {object}  models.Message
+// @Router       /user/{id} [get]
+func GetUserByID(c *fiber.Ctx) error {
+	var paramsName models.UserParamsID
+	err := c.ParamsParser(&paramsName)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Wrong parameters",
+		})
+	}
+
+	user, err := models.FindByID(paramsName.ID)
+	if err != nil {
+		c.Status(fiber.StatusNoContent)
+		return c.JSON(fiber.Map{
+			"message": "No user found for that ID",
+		})
+	}
+
+	userPublicData := models.UserToUserPublicData(user)
+
+	return c.JSON(userPublicData)
+}
+
 // GetUsersByName godoc
-// @Summary      Retrieve the user phemes
-// @Description  get the user phemes
+// @Summary      Retrieve the users by name
+// @Description  get the users
 // @Tags         user
 // @Accept       json
 // @Produce      json
@@ -34,7 +68,71 @@ func GetUsersByName(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(users)
+	usersPublicData := models.UsersToUsersPublicData(users)
+
+	return c.JSON(usersPublicData)
+}
+
+// GetFriends godoc
+// @Summary      Retrieve the user friends
+// @Description  get the user friends
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  models.User
+// @Failure      400  {object}  models.Message
+// @Failure      401  {object}  models.Message
+// @Router       /user/friends [get]
+func GetFriends(c *fiber.Ctx) error {
+	user, err := models.GetUser(c, SecretKey)
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": "Unauthenticated",
+		})
+	}
+
+	friends, err := models.GetFriends(user.ID)
+	if err != nil {
+		c.Status(fiber.StatusNoContent)
+		return c.JSON(fiber.Map{
+			"message": "Failed to get the friends",
+		})
+	}
+
+	return c.JSON(friends)
+}
+
+// GetFollowers godoc
+// @Summary      Retrieve the user followers
+// @Description  get the user followers
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Param        name path      id  true  "User ID"
+// @Success      200  {object}  models.User
+// @Failure      400  {object}  models.Message
+// @Failure      401  {object}  models.Message
+// @Router       /user/followers/{id} [get]
+func GetFollowers(c *fiber.Ctx) error {
+	var paramsName models.UserParamsID
+	err := c.ParamsParser(&paramsName)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Wrong parameters",
+		})
+	}
+
+	followers, err := models.GetFollowers(paramsName.ID)
+	if err != nil {
+		c.Status(fiber.StatusNoContent)
+		return c.JSON(fiber.Map{
+			"message": "Failed to get the friends",
+		})
+	}
+
+	return c.JSON(followers)
 }
 
 // AddFriend godoc
@@ -73,7 +171,7 @@ func AddFriend(c *fiber.Ctx) error {
 		})
 	}
 
-	err = models.AddFriend(user.ID, paramsID.ID)
+	friend, err := models.AddFriend(user.ID, paramsID.ID)
 	if err != nil {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
@@ -81,9 +179,7 @@ func AddFriend(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"message": "Success",
-	})
+	return c.JSON(friend)
 }
 
 // AddFollower godoc
@@ -122,7 +218,7 @@ func AddFollower(c *fiber.Ctx) error {
 		})
 	}
 
-	err = models.AddFollower(user.ID, paramsID.ID)
+	follower, err := models.AddFollower(user.ID, paramsID.ID)
 	if err != nil {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
@@ -130,9 +226,7 @@ func AddFollower(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(fiber.Map{
-		"message": "Success",
-	})
+	return c.JSON(follower)
 }
 
 // DeleteFriend godoc

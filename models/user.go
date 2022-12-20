@@ -25,13 +25,37 @@ func init() {
 type User struct {
 	ID           uint      `json:"id"`
 	Version      uint      `json:"version" gorm:"not null"`
-	Name         string    `json:"userName" gorm:"not null"`
+	Name         string    `json:"username" gorm:"not null"`
 	Email        string    `json:"email" gorm:"unique;not null"`
+	Avatar       string    `json:"avatar"`
 	Password     []byte    `json:"-"  gorm:"not null"`
 	PasswordDate time.Time `json:"-" gorm:"not null"`
 	CreatedAt    time.Time `json:"createdAt" gorm:"not null"`
 	Followers    []User    `json:"-" gorm:"many2many:followship;association_jointable_foreignkey:follow_id"`
 	Friends      []User    `json:"-" gorm:"many2many:friendship;association_jointable_foreignkey:friend_id"`
+}
+
+// UserToUserPublicData convert a user to a data public user
+func UserToUserPublicData(user *User) *UserPublicData {
+	userPublicData := &UserPublicData{}
+	userPublicData.ID = user.ID
+	userPublicData.Name = user.Name
+	userPublicData.Avatar = user.Avatar
+	userPublicData.CreatedAt = user.CreatedAt
+
+	return userPublicData
+}
+
+// UsersToUsersPublicData convert a users array to a data public users array
+func UsersToUsersPublicData(users *[]User) *[]UserPublicData {
+	usersPublicData := &[]UserPublicData{}
+
+	for _, user := range *users {
+		userPublicData := UserToUserPublicData(&user)
+		*usersPublicData = append(*usersPublicData, *userPublicData)
+	}
+
+	return usersPublicData
 }
 
 // GetUser returns the logged user.
@@ -75,9 +99,9 @@ func FindByID(userID uint) (*User, error) {
 }
 
 // FindByName returns the users that contains the name.
-func FindByName(userName string) ([]User, error) {
-	users := []User{}
-	usersByName := Db.Model(&User{}).Select("id, name").Order("created_at desc").Find(&users, "name LIKE ?", "%"+userName+"%")
+func FindByName(userName string) (*[]User, error) {
+	users := &[]User{}
+	usersByName := Db.Model(&User{}).Order("created_at desc").Find(&users, "name LIKE ?", "%"+userName+"%")
 	if usersByName.Error != nil {
 		println(usersByName.Error)
 		return users, usersByName.Error
@@ -132,43 +156,43 @@ func GetFollowers(userID uint) (*[]uint, error) {
 }
 
 // AddFriend adds a friends to a user.
-func AddFriend(userID uint, friendID uint) error {
-	user := User{}
-
+func AddFriend(userID uint, friendID uint) (*User, error) {
+	friend := &User{}
 	friend, err := FindByID(friendID)
 	if err != nil {
 		println(err)
-		return err
+		return friend, err
 	}
 
+	user := User{}
 	Db.Preload("Friends").First(&user, "id = ?", userID)
 	err = Db.Model(&user).Association("Friends").Append(friend)
 	if err != nil {
 		log.Println(err)
-		return err
+		return friend, err
 	}
 
-	return nil
+	return friend, nil
 }
 
 // AddFollower adds a follower to a user.
-func AddFollower(userID uint, followerID uint) error {
-	user := User{}
-
+func AddFollower(userID uint, followerID uint) (*User, error) {
+	follower := &User{}
 	follower, err := FindByID(followerID)
 	if err != nil {
 		println(err)
-		return err
+		return follower, err
 	}
 
+	user := User{}
 	Db.Preload("Followers").First(&user, "id = ?", userID)
 	err = Db.Model(&user).Association("Followers").Append(follower)
 	if err != nil {
 		log.Println(err)
-		return err
+		return follower, err
 	}
 
-	return nil
+	return follower, nil
 }
 
 // RemoveFriend removes a friends for a user.
