@@ -38,7 +38,7 @@ func GetAllPhemes(c *fiber.Ctx) error {
 	return c.JSON(phemes)
 }
 
-// GetUserPhemes godoc
+// GetMyPhemes godoc
 // @Summary      Retrieve the user phemes
 // @Description  get the user phemes
 // @Tags         phemes
@@ -46,7 +46,7 @@ func GetAllPhemes(c *fiber.Ctx) error {
 // @Success      200  {object}  []models.Pheme
 // @Failure      401  {object}  models.Message
 // @Router       /pheme/mine [get]
-func GetUserPhemes(c *fiber.Ctx) error {
+func GetMyPhemes(c *fiber.Ctx) error {
 	user, err := models.GetUser(c, SecretKey)
 	if err != nil {
 		c.Status(fiber.StatusUnauthorized)
@@ -56,6 +56,43 @@ func GetUserPhemes(c *fiber.Ctx) error {
 	}
 
 	phemes, err := models.FetchUserPhemes(user.ID, byte(models.PRIVATE))
+	if err != nil {
+		c.Status(fiber.StatusNoContent)
+		return c.JSON(fiber.Map{
+			"message": "No phemes found for the user",
+		})
+	}
+
+	return c.JSON(phemes)
+}
+
+// GetUserPhemes godoc
+// @Summary      Retrieve the user phemes
+// @Description  get the user phemes
+// @Tags         phemes
+// @Produce      json
+// @Param        id   path      int  true  "User ID"
+// @Success      200  {object}  []models.Pheme
+// @Failure      401  {object}  models.Message
+// @Router       /pheme/user/{id} [get]
+func GetUserPhemes(c *fiber.Ctx) error {
+	var paramsPhemeID models.PhemeParamsID
+	if err := c.ParamsParser(&paramsPhemeID); err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Wrong parameters",
+		})
+	}
+
+	user, err := models.GetUser(c, SecretKey)
+	if err != nil {
+		c.Status(fiber.StatusUnauthorized)
+		return c.JSON(fiber.Map{
+			"message": "Unauthenticated",
+		})
+	}
+
+	phemes, err := models.FetchPhemes(paramsPhemeID.ID, user.ID, byte(models.PUBLIC))
 	if err != nil {
 		c.Status(fiber.StatusNoContent)
 		return c.JSON(fiber.Map{
@@ -94,7 +131,7 @@ func GetPheme(c *fiber.Ctx) error {
 		})
 	}
 
-	phemes, err := models.FetchPheme(paramsPhemeID.ID, user.ID)
+	pheme, err := models.FetchPheme(paramsPhemeID.ID, user.ID)
 	if err != nil {
 		c.Status(fiber.StatusBadRequest)
 		return c.JSON(fiber.Map{
@@ -102,7 +139,7 @@ func GetPheme(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(phemes)
+	return c.JSON(pheme)
 }
 
 // PostPheme godoc

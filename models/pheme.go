@@ -28,8 +28,8 @@ type Pheme struct {
 	Visibility byte      `json:"visibility" sql:"visibility" gorm:"not null" validate:"required"`
 	Category   string    `json:"category" gorm:"not null" validate:"required"`
 	Text       string    `json:"text" gorm:"not null" validate:"required"`
-	CreatedBy  uint      `json:"createdId" gorm:"not null"`
-	UserID     uint      `json:"userID" gorm:"not null" validate:"required"`
+	CreatedBy  uint      `json:"createdBy" gorm:"not null"`
+	UserID     uint      `json:"userId" gorm:"not null" validate:"required"`
 }
 
 // FetchAllPhemes returns all the phemes of a user, friends and followers with equal or higher visibility.
@@ -74,7 +74,7 @@ func FetchUserPhemes(userID uint, visibility byte) (*[]Pheme, error) {
 	return phemes, nil
 }
 
-// FetchPheme returns the pheme if is visible for the user.
+// FetchPheme returns the pheme if is visible to the user.
 func FetchPheme(phemeID uint, userID uint) (*Pheme, error) {
 	pheme := &Pheme{}
 	thePheme := Db.Model(&Pheme{}).Find(&pheme, phemeID)
@@ -88,6 +88,25 @@ func FetchPheme(phemeID uint, userID uint) (*Pheme, error) {
 	}
 
 	return pheme, nil
+}
+
+// FetchPhemes returns the phemes if are visible to the user.
+func FetchPhemes(phemeID uint, userID uint, visibility byte) (*[]Pheme, error) {
+	phemes := &[]Pheme{}
+	thePhemes := Db.Model(&Pheme{}).Find(&phemes, "user_id = ? and visibility >= ?", phemeID, visibility)
+	if thePhemes.Error != nil {
+		println(thePhemes.Error)
+		return phemes, thePhemes.Error
+	}
+
+	visiblePhemes := &[]Pheme{}
+	for _, pheme := range *phemes {
+		if pheme.CreatedBy == userID || pheme.UserID == userID {
+			*visiblePhemes = append(*visiblePhemes, pheme)
+		}
+	}
+
+	return visiblePhemes, nil
 }
 
 // CreatePheme adds a pheme to the DB.
