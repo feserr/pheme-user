@@ -77,6 +77,17 @@ func GetUser(c *fiber.Ctx, secretKey string) (User, error) {
 	return user, nil
 }
 
+// GetUsers returns the users.
+func GetUsers() (*[]User, error) {
+	users := &[]User{}
+	if err := Db.Find(&users).Order("create_at desc"); err.Error != nil {
+		println(err.Error)
+		return users, err.Error
+	}
+
+	return users, nil
+}
+
 // DeleteByID deletes the user by the ID.
 func DeleteByID(userID uint) error {
 	if err := Db.Delete(&User{}, userID); err.Error != nil {

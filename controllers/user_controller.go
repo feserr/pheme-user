@@ -5,6 +5,39 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// GetUsers godoc
+// @Summary      Retrieve the users
+// @Description  get the users
+// @Tags         user
+// @Accept       json
+// @Produce      json
+// @Success      200  {object}  []models.UserPublicData
+// @Failure      400  {object}  models.Message
+// @Failure      401  {object}  models.Message
+// @Router       /user/{id} [get]
+func GetUsers(c *fiber.Ctx) error {
+	var paramsName models.UserParamsID
+	err := c.ParamsParser(&paramsName)
+	if err != nil {
+		c.Status(fiber.StatusBadRequest)
+		return c.JSON(fiber.Map{
+			"message": "Wrong parameters",
+		})
+	}
+
+	users, err := models.GetUsers()
+	if err != nil {
+		c.Status(fiber.StatusNoContent)
+		return c.JSON(fiber.Map{
+			"message": "No users found",
+		})
+	}
+
+	usersPublicData := models.UsersToUsersPublicData(users)
+
+	return c.JSON(usersPublicData)
+}
+
 // GetUserByID godoc
 // @Summary      Retrieve the user by ID
 // @Description  get the user
